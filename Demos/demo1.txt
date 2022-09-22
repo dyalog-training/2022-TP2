@@ -1,0 +1,42 @@
+﻿⍝ Part 1 - Isolate is a Namespace
+)load isolate
+ns1←⎕NS ''     ⍝ create empty namespace
+ns1.x←1 2 3
+ns1.(x+1)
+ns1.(+/x÷≢x)   ⍝ mean of x
+is1←ø ''       ⍝ ø ←→ ¤ ←→ isolate.New
+is1.x←4 5 6 7
+is1.(+/x÷≢x)   
+is1.avg←{(+/⍵)÷≢⍵}
+is1.(avg←{(+/⍵)÷≢⍵})
+is1.(avg x)
+is1.⎕FX ,⊂'avg←{(+/⍵)÷≢⍵}'
+ns1.(avg←{(+/⍵)÷≢⍵})
+is1←isolate.New ns1 ⍝ Clone ns1 as an isolate
+is1.(avg x)
+⎕FX 'r←mean x' 'r←(+⌿ ÷ ≢) x'
+y←1 2 3 4
+mean y
+is2←isolate.New 'mean' 'y'
+is2.(mean y)
+⎕←dfns←(+2 ⎕NQ '.' 'GetEnvironment' 'DYALOG'),'ws\dfns.dws' 
+is3←isolate.New dfns ⍝ Simple char = ws name
+is3.(fibonacci¨⍳20)
+iss←ø¨ 3⍴ns1 ⍝ THREE clones of ns1
+iss
+]boxing on
+iss.x
+⎕←data←?3 4⍴100 ⍝ "big data" :-)
+↓data
+iss.x←↓data
+iss.x
+iss.(x+1)
+iss.x+1
+iss.(avg x)
+iss.⎕DL 3 ⍝ Parallel computation
+twelve←is1.⎕DL 12
+2+3
+4×5
+twelve ⍝ Asynchronous computation
+)erase is1 is2 is3 twelve
+

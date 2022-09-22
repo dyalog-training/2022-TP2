@@ -1,0 +1,13 @@
+﻿⍝ Part 5 - Debugging
+⎕FX 'r←a div b' 'r←a÷b'
+6 div 2
+recip←10 (div IÏ) 1 2 0
+recip
+recip[1 2]
+recip[3]
+isolate.Failed 'recip'
+isolate.Config ''
+isolate.Config 'onerror' 'debug'
+isolate.Reset 0
+recip←10 (div IÏ) 1 2 0
+recip

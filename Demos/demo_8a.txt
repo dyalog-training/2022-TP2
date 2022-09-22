@@ -1,0 +1,11 @@
+﻿⍝ Part 8 - Servers
+⍝ This demo not expected to be used in 2022, was used in 2015
+⎕FX 'r←loop n' 'r←3⊃⎕AI' ':While 0<n←n-1 ⋄ {}∪10000?10000 ⋄ :End' 'r←(3⊃⎕AI)-r'
+⎕VR 'loop'
+⍝ Need a volunteer
+⍝ Connect to SSID: Isolates, Password: Parallel15
+⍝     )load isolate
+⍝     isolate.StartServer 'ip=192.168.0'
+ports←7052 7053 7054 7055
+isolate.AddServer 'volunteer' ports
+t←⎕ai ⋄ loop IÏ 8⍴1E4 ⋄ ⎕ai-t

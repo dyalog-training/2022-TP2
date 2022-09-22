@@ -1,0 +1,4 @@
+ r←Wait delay
+⍝ Our business logic
+
+ r←⎕DL 2×delay

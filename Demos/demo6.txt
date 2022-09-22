@@ -1,0 +1,7 @@
+﻿⍝ Part 6 - EachX
+(⎕DL ll.Each) 40⍴1
+iss←ø¨8⍴⊂⍬ ⍝ Make 8 isolates
+(⎕DL ll.EachX iss) 40⍴1
+⎕VR ⎕FX 'r←cap Status counts' 'r←0⊣⎕←,''caption'' ''nprocs'' ''nitems'',⍪cap (¯1↓counts) (¯1↑counts)'
+('⎕DL' 'Status' 'Delay progress...' ll.EachX iss) 20⍴1
+⎕VR ⎕FX 'r←cap Status counts' 'r←12<¯1↑counts⊣⎕←,''caption'' ''nprocs'' ''nitems'',⍪cap (¯1↓counts) (¯1↑counts)'

@@ -1,0 +1,12 @@
+﻿⍝ Part 4 - Shared data
+isolate.Config ''
+isolate.Config 'listen' 1  ⍝ listen for callbacks
+isolate.Reset 0
+COUNTER←1
+{##.COUNTER←##.COUNTER+⍵} IÏ 1 1 1 1
+COUNTER
+⎕FX 'R←Increment X' 'R←COUNTER←COUNTER+X'
+⎕VR 'Increment'
+COUNTER←1
+{##.Increment ⍵} IÏ 1 1 1 1
+COUNTER
