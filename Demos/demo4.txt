@@ -5,8 +5,9 @@ isolate.Reset 0
 COUNTER←1
 {##.COUNTER←##.COUNTER+⍵} IÏ 1 1 1 1
 COUNTER
-⎕FX 'R←Increment X' 'R←COUNTER←COUNTER+X'
-⎕VR 'Increment'
+⎕VR ⎕FX 'R←Increment X' 'R←COUNTER←COUNTER+X'
 COUNTER←1
 {##.Increment ⍵} IÏ 1 1 1 1
 COUNTER
+isolate.Config 'listen' 0 ⍝ turn off when not needed
+isolate.Reset 0

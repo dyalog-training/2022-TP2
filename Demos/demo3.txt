@@ -14,20 +14,20 @@ q←queens IÏ ⍳13
 isolate.Running 'q'
 ¯1↑isolate.Values 'q'
 ≢¨q
-⍝ Now open Task Manager
+]open taskmgr
 T←⎕AI ⋄ ≢¨queens  ¨ 4⍴12 ⋄ ⎕AI-T
 T←⎕AI ⋄ ≢¨queens IÏ 4⍴12 ⋄ ⎕AI-T
 
-⎕FX 'r←loop n' 'r←3⊃⎕AI' ':While 0<n←n-1 ⋄ {}∪10000?10000 ⋄ :End' 'r←(3⊃⎕AI)-r'
-⎕VR 'loop'
+⎕VR ⎕FX 'r←loop n' 'r←3⊃⎕AI' ':While 0<n←n-1 ⋄ {}∪10000?10000 ⋄ :End' 'r←(3⊃⎕AI)-r'
 loop 1000
-T←⎕AI ⋄ loop  ¨ 4⍴10000 ⋄ ⎕AI-T
-T←⎕AI ⋄ loop IÏ 4⍴10000 ⋄ ⎕AI-T
-queens_asynch←queens II              ⍝ f II  ←→ f∥  ⍝ asynchronous version
-nq←queens_asynch 13                  ⍝ z is a future
+T←⎕AI ⋄ loop  ¨ 4⍴10000 ⋄ ⎕←each←3⊃⎕AI-T
+T←⎕AI ⋄ loop IÏ 4⍴10000 ⋄ ⎕←peach←3⊃⎕AI-T
+each÷peach
+queens_asynch←queens IÏ              ⍝ f IÏ  ←→ f∥¨  ⍝ asynchronous version
+nq←queens_asynch 12 13               ⍝ nq is a future
 'MYGUI' ⎕WC 'Form' 'Queens' ('Posn' 10 10)('Size' 10 40)
-'MYGUI.TEXT'⎕WC'Label'(txt←'# of solutions to queens 13 is ...')('Size'⍬ 90)('Font' 'Courier' 20)
-{MYGUI.TEXT.Caption←(¯3↓txt),⍕≢nq}&0
+'MYGUI.TEXT'⎕WC'Label'(txt←'# of solutions to queens 12 and 13 is ...')('Size'⍬ 90)('Font' 'Courier' 20)
+{MYGUI.TEXT.Caption←(¯3↓txt),⍕≢¨nq}&0
 ⎕DQ 'MYGUI'
 
 +/ +/IÏ (100⍴25↑1)⊂ {+/⍳⍵} IÏ ⍳100  

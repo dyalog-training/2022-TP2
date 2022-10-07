@@ -5,7 +5,7 @@ z←iss.⎕DL 3 6 9
 ⍴z
 z
 z←iss.⎕DL 5 10 20
-y←z[10⍴1 2]
+y←z[1 2]
 y
 z[3]
 z←iss.⎕DL 3 6 9
@@ -25,5 +25,5 @@ z[3]←9
 z
 ⎕←iss.⎕DL 2 3 20 ⍝ Interrupt Me
 isolate.State ''
-iss.(2+2)
+iss.(2+2) ⍝ "reuse" all 3 isolates
 isolate.State ''

@@ -11,3 +11,8 @@ isolate.Config 'onerror' 'debug'
 isolate.Reset 0
 recip←10 (div IÏ) 1 2 0
 recip
+isolate.Config 'processors' 2
+isolate.Config 'rideinit' 'POLL:localhost:4502'
+isolate.Reset 0
+]open C:\Users\mkrom\AppData\Local\Programs\Dyalog\Ride-4.4\Ride-4.4.exe
+10 (div IÏ) 1 2 0
