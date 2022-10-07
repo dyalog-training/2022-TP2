@@ -1,0 +1,42 @@
+ Run;iss;t;F;⎕TRAP;exe
+⍝ Example of an application workspace serving up its own isolate slave processes
+⍝ Set ⎕LX←'#.isolate.ynys.isoStart ⍬ ⋄ Run'
+⍝ This workspace will also work as a bound executable
+⍝ (apologies to Linux and Mac users, this is Windows only code)
+
+ ⎕TRAP←(999 'C' '→ERR')(0 'E' '#.LOG')
+ ⍝ #.LOG creates a variable #.DMSI and ⎕SIGNALs 999
+ ⍝       ... which is caught in this function
+
+ →isolate.isSlave⍴0 ⍝ If we are a slave process isoStart will serve isolates
+
+ ⍝ --- If we get here, we are the application ---
+
+ ⍝ --- Configure isolates for use ---
+ {}isolate.Reset 0  ⍝   Get rid of any zombie isolates
+ :If 'MyApp.exe'≡¯9↑exe←isolate.APLProcess.GetCurrentExecutable
+     ⍝ LOOKS LIKE we are the bound executable
+     {}isolate.Config'runtime'exe  ⍝ 0 or 1, OR the actual name of an executable
+     {}isolate.Config'workspace' '' ⍝ no workspace to load, it is already there
+ :Else
+     {}isolate.Config'workspace'⎕WSID ⍝ Set bas workspace to be *this*
+ :EndIf
+
+ ⍝ --- Here is the actual application ---
+ iss←isolate.New¨'' '' '' ⍝ Make 3 isolates
+ ⎕←'Isolates started...'
+ t←iss.{#.Wait ⍵}1 2 3   ⍝ Call some application code: Note Wait is in #
+ 'F'⎕WC'Form'(⍕,'.'⎕WG'APLVersion')('Size'(25 25))  ⍝ Make a form with APL version in caption
+ 'F.T'⎕WC'Text' 'Wait for it...'(50 50)     ⍝ Make it look like something is happening
+ 1 ⎕NQ'.' 'Flush'                           ⍝ Force GUI to update
+ 'F.T'⎕WC'Text'('The result of Wait was: ',⍕t)(50 50) ⍝ Suspense is over
+ ⎕DQ'F'
+ →0
+
+ ⍝ --- Display startup errors ---
+ERR:
+ ⎕TRAP←0 'S'              ⍝ Trap no more errors
+ 'F'⎕WC'Form' 'Error'     ⍝ Create a form
+ 'F.T'⎕WC'Text'(⍕⍪#.DMSI)(50 50) ⍝ Put ⎕DM and ⎕SI in the body
+ ⎕DQ'F'
+ →0

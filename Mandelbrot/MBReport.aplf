@@ -1,0 +1,20 @@
+r←MBReport data;time;size;bl;m;types;type;sizes
+⍝ Format result of MBTest into a nice report
+⎕DIV←1
+
+bl←0.001×(m←data[;1]∊⊂'baseline')/data[;3]
+(type size time)←↓⍉(~m)⌿data
+time←time÷1000 ⍝ ms → seconds
+
+r←0⍴⍨≢¨(types sizes)←∪¨type size
+r[(types⍳type),¨sizes⍳size]←time
+
+r←((⊂'Mode \ Blocks'),types),(7 0∘⍕¨sizes)⍪(⍴r)⍴↓'BF7.1' ⎕FMT⍪,(r≠0)×bl÷r
+
+r←'' ('Baseline',(1⍕bl),' seconds. Speedup factors:') '' r
+r,←'' 'Modes:' 'each:     Call MandelBrotCalc¨ on partitioned data'
+r,←⊂'isolates: One isolate per group'
+r,←⊂'eachX:    EachX using ',(⍕#.isolate.Config 'processors'),' isolates'
+r,←⊂'SHOWHR:   As eachX but providing GUI updates'
+
+r←⍕⍪r

@@ -1,4 +1,4 @@
-﻿⍝ Short Isolate demo
+﻿⍝ Short Isolate demo - not used in workshop
 )load isolate
 ns1←⎕NS ''     ⍝ create empty namespace
 ns1.x←1 2 3
@@ -12,7 +12,7 @@ is1.(avg x)
 ns1.(avg←{(+/⍵)÷≢⍵})
 is1←isolate.New ns1     ⍝ Clone ns1 as an isolate
 is1.(avg x)
-⎕←dfns←(+2 ⎕NQ '.' 'GetEnvironment' 'DYALOG'),'ws\dfns.dws' 
+⎕←dfns←(+2 ⎕NQ '.' 'GetEnvironment' 'DYALOG'),'\ws\dfns.dws' 
 is3←isolate.New dfns    ⍝ Simple character vector is a WS name
 is3.(fibonacci¨⍳20)
 iss←ø¨ 3⍴ns1 ⍝ THREE clones of ns1

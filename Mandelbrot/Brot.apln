@@ -35,59 +35,6 @@
      
     ∇
 
-    ∇ weight←MandelbrotI(xsteps ysteps xmin ymin xmax ymax iterations);cur;esc;hist;i;inx;nesc;sets;x;y;s;isos;ixx;rr;futures;start;available;procs;calcns;counters
-    ⍝ count number of iterations before escape (maximum value is iterations for points that don't escape)
-    ⍝ NB points & counters must be global for eachX case to work
-     
-      x←xmin+(xmax-xmin)×(¯1+⍳xsteps)÷(¯1+xsteps)
-      y←ymin+(ymax-ymin)×(¯1+⍳ysteps)÷(¯1+ysteps)
-      points←1500⌶,(0J1×y)∘.+x ⍝ Hash for lookup
-     
-      :If MODE≡''
-
-          counters←iterations MandelbrotCalc points ⍝ Baseline
-
-      :Else      
-          sets←((≢points)⍴(⌈(≢points)÷GROUPS)↑1)⊂points
-          calcns←⎕NS'MandelbrotCalc' 'IsMandelbrot' 'MBC' ⍝ fns to inject into isolate
-     
-          :If MODE≡'each'      ⍝ --- Just break it up into sets, but use local each operator
-
-              counters←⊃,/iterations MandelbrotCalc¨sets
-     
-          :ElseIf MODE≡'eachX' ⍝ --- Use ll.EachX to serially use oneisolate per processor
-
-              procs←#.isolate.Config'processors' 
-              isos←#.ø¨procs⍴calcns
-              counters←(≢¨sets)⍴¨0 ⍝ To be filled in by MBCUpdate, called as each result comes in
-
-              MBCDONE←0
-              MBCUpdateHR&0        ⍝ Start HTMLRenderer update thread
-              futures←(iterations,¨⍳≢sets)('MBC' 'MBCUpdate'#.ll2.EachX isos)sets
-              MBCDONE←1            ⍝ Stop HTMLRenderer thread
-              counters←∊2⊃¨futures ⍝ Extract result, ignoring set indices
-              MBCUpdateHR 1        ⍝ Final Update of GUI
-     
-          :Else                ⍝ --- Use one isolate per group regardless of processor count
-              isos←#.ø¨GROUPS⍴calcns
-              futures←iterations isos.{⍺ MandelbrotCalc ⍵}sets
-              start←3⊃⎕AI
-              :Repeat
-                  ⎕DL 0.5
-                  :If ∨/available←#.isolate.Available'futures'
-                     ⍝ ⎕←(7 1⍕0.001×start-⍨3⊃⎕AI),available
-                  :EndIf
-              :Until ∧/available
-              counters←⊃,/futures
-          :EndIf     
-      :EndIf
-     
-      counters←(ysteps xsteps)⍴counters
-      ⍝ linear normalisation from [1;iterations] to [0;1]
-      weight←(¯1+counters)÷(¯1+iterations)  
-      ⎕EX 'points' 'counters' ⍝ Must be global for MBCUpdate to access
-    ∇
-
     ∇ r←left MBC set;iterations;ix      
       ⍝ Return set index AND result, so MBCUpdate knows where to put it
       (iterations ix)←left
@@ -207,6 +154,59 @@
       z←MandelbrotI width height xmin ymin xmax ymax iterations
       pixmat←(↑palette)ColorMap 0⌈z
       pixmat←256⊥(1⌽⍳3)⍉⌊0.5+pixmat
+    ∇          
+    
+        ∇ weight←MandelbrotI(xsteps ysteps xmin ymin xmax ymax iterations);cur;esc;hist;i;inx;nesc;sets;x;y;s;isos;ixx;rr;futures;start;available;procs;calcns;counters
+    ⍝ count number of iterations before escape (maximum value is iterations for points that don't escape)
+    ⍝ NB points & counters must be global for eachX case to work
+     
+      x←xmin+(xmax-xmin)×(¯1+⍳xsteps)÷(¯1+xsteps)
+      y←ymin+(ymax-ymin)×(¯1+⍳ysteps)÷(¯1+ysteps)
+      points←1500⌶,(0J1×y)∘.+x ⍝ Hash for lookup
+     
+      :If (⊂MODE)∊'' 'local'
+
+          counters←iterations MandelbrotCalc points ⍝ Baseline
+
+      :Else      
+          sets←((≢points)⍴(⌈(≢points)÷GROUPS)↑1)⊂points
+          calcns←⎕NS'MandelbrotCalc' 'IsMandelbrot' 'MBC' ⍝ fns to inject into isolate
+     
+          :If MODE≡'each'      ⍝ --- Just break it up into sets, but use local each operator
+
+              counters←⊃,/iterations MandelbrotCalc¨sets
+     
+          :ElseIf MODE≡'eachX' ⍝ --- Use ll.EachX to serially use oneisolate per processor
+
+              procs←#.isolate.Config'processors' 
+              isos←#.ø¨procs⍴calcns
+              counters←(≢¨sets)⍴¨0 ⍝ To be filled in by MBCUpdate, called as each result comes in
+
+              MBCDONE←0
+              MBCUpdateHR&0        ⍝ Start HTMLRenderer update thread
+              futures←(iterations,¨⍳≢sets)('MBC' 'MBCUpdate'#.ll2.EachX isos)sets
+              MBCDONE←1            ⍝ Stop HTMLRenderer thread
+              counters←∊2⊃¨futures ⍝ Extract result, ignoring set indices
+              MBCUpdateHR 1        ⍝ Final Update of GUI
+     
+          :Else                ⍝ --- Use one isolate per group regardless of processor count
+              isos←#.ø¨GROUPS⍴calcns
+              futures←iterations isos.{⍺ MandelbrotCalc ⍵}sets
+              start←3⊃⎕AI
+              :Repeat
+                  ⎕DL 0.5
+                  :If ∨/available←#.isolate.Available'futures'
+                     ⍝ ⎕←(7 1⍕0.001×start-⍨3⊃⎕AI),available
+                  :EndIf
+              :Until ∧/available
+              counters←⊃,/futures
+          :EndIf     
+      :EndIf
+     
+      counters←(ysteps xsteps)⍴counters
+      ⍝ linear normalisation from [1;iterations] to [0;1]
+      weight←(¯1+counters)÷(¯1+iterations)  
+      ⎕EX 'points' 'counters' ⍝ Must be global for MBCUpdate to access
     ∇
 
     ∇ pixmat←BuddhabrotImage(width height xmin ymin xmax ymax iterations density);palette;pixmat

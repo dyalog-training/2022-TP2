@@ -47,7 +47,7 @@
       :EndIf
      
       :If 0=⍴cb  ⍝ Default Progress Form
-          :If PEACHForm cblarg(≢iss)(×/⍴right)
+          :If PEACHForm 0 cblarg(≢iss)(×/⍴right)
               cb←'PEACHUpdate'
           :EndIf
       :EndIf ⍝ Default
@@ -74,7 +74,7 @@
       ⎕SIGNAL cancelled/6
     ∇
               
-    ∇ r←PEACHForm(caption nprocs nitems);p;labels;pos;pb;n
+    ∇ r←PEACHForm(ix caption nprocs nitems);p;labels;pos;pb;n
     ⍝ Make a progress form with a progress bar per process and one for the total
      
       :Trap 0
@@ -95,11 +95,11 @@
       2 ⎕NQ'.' 'Flush'
     ∇
 
-    ∇ {abort}←cap PEACHUpdate arg
+    ∇ {abort}←cap PEACHUpdate arg;z
       :Trap abort←0
-          PF.texts.Caption←⍕¨arg
-          PF.bars.Thumb←4⊃arg
-      :Else
+          PF.texts.Caption←⍕¨z←∊2↑2↓arg
+          PF.bars.Thumb←z
+      :Else              
           abort←1 ⍝ User killed the GUI
       :EndTrap
     ∇

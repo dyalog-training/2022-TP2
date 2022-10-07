@@ -1,4 +1,4 @@
-﻿⍝ Part 1 - Isolate is a Namespace
+﻿⍝ Session 1 - "Explicit" Isolate Namespaces
 )load isolate
 ns1←⎕NS ''     ⍝ create empty namespace
 ns1.x←1 2 3

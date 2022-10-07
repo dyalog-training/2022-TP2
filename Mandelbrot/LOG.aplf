@@ -1,0 +1,3 @@
+ LOG
+ #.DMSI←⎕DM,⎕SI
+ ⎕SIGNAL 999
