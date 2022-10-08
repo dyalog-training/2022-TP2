@@ -1,7 +1,15 @@
 ﻿⍝ Part 6 - EachX
-(⎕DL ll.Each) 40⍴1
-iss←ø¨8⍴⊂⍬ ⍝ Make 8 isolates
-(⎕DL ll.EachX iss) 40⍴1
-⎕VR ⎕FX 'r←cap Status counts' 'r←0⊣⎕←,''caption'' ''nprocs'' ''nitems'',⍪cap (¯1↓counts) (¯1↑counts)'
-('⎕DL' 'Status' 'Delay progress...' ll.EachX iss) 20⍴1
-⎕VR ⎕FX 'r←cap Status counts' 'r←12<¯1↑counts⊣⎕←,''caption'' ''nprocs'' ''nitems'',⍪cap (¯1↓counts) (¯1↑counts)'
+)load isolate
+]link.import # c:\devt\2022-tp2\Mandelbrot -overwrite
+⍝ Overwrote ll
+ll.⎕nl -4 ⍝ Operators
+(⎕DL ll.Each) dl←20⌽(?40⍴4),¯1
+⍝ ll.EachX allows you to use a set of pre-created isolates
+⍝    it also allows you to define
+iss←ø¨6⍴⊂⍬ ⍝ Make 6 isolates
+(⎕DL ll.EachX iss) dl
+labels←'index' 'result' 'counters' 'done' 'failed'
+⎕VR ⎕FX 'r←Status dummy' '⎕←,labels,⍪THIS RESULT[THIS] ISO_COUNTERS DONE FAILED' 'r←0'
+('⎕DL' 'Status' 'Delay progress...' ll2.EachX iss) 20⍴1
+⎕VR ⎕FX 'r←Status dummy' 'r←12<DONE⊣⎕←THIS COUNTERS' ⍝ Abort after 12 started
+('⎕DL' 'Status' 'Delay progress...' ll2.EachX iss) 20⍴1

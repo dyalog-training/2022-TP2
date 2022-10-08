@@ -1,5 +1,5 @@
 r←loop n
-r←⎕AI[3]  ⍝ Morten was here
+r←⎕AI[3]
 :Repeat
   n←n-1
 :Until n≤0
