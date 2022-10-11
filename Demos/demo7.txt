@@ -1,11 +1,11 @@
 ﻿⍝ Part 7 - Exploring Isolate Performance
 isolate.Reset 0
-⎕VR ⎕FX 'r←loop n' 'r←⎕AI[3]' ':Repeat ⋄ n-←1' ':Until n≤0' 'r←⎕AI[3]-r'
-iss←isolate.New¨10⍴⊂'loop'
+⎕VR ⎕FX 'r←loop n' 'r←⎕AI[3]' ':Repeat ⋄ n←n-1' ':Until n≤0' 'r←⎕AI[3]-r'
+iss←isolate.New¨10⍴⊂,⊂'loop'
 ]open taskmgr
 loop 1E8
 z←⎕AI[3] ⋄ t←0+iss.loop 1E7 ⋄ ⎕←(⎕AI[3]-z),t
-z←⎕AI[3] ⋄ t←0+(5↑iss).loop 1E7 ⋄ ⎕←(⎕AI[3]-z),t
+z←⎕AI[3] ⋄ t←0+(5↑iss).loop 2E7 ⋄ ⎕←(⎕AI[3]-z),t
 
 ]link.import # c:\devt\2022-TP2\Mandelbrot
 ]link.import # c:\devt\2022-TP2\Mandelbrot -overwrite
