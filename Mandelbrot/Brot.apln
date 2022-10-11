@@ -41,13 +41,12 @@
       r←ix(iterations MandelbrotCalc set)
     ∇
 
-    ∇ r←left MBCUpdate(ix result counts count);set;cnt
+    ∇ r←MBCUpdate dummy;set;cnt
       ⍝ Update "counters" with one more result
 
-      (set cnt)←result
+      (set cnt)←#.ll.(THIS⊃RESULT)
       →(set≡⎕NULL)⍴r←0 ⍝ Init call
-      (set⊃counters)←cnt ⍝ Update our bit
-     
+      (set⊃counters)←cnt ⍝ Update our bit    
     ∇
 
     ∇ MBCUpdateHR once;weight;pixmat
@@ -59,7 +58,7 @@
           pixmat←(↑palette)ColorMap xsteps ysteps⍴0⌈weight
           pixmat←256⊥(1⌽⍳3)⍉⌊0.5+pixmat
           HTML←'<img width=600 height=600 src="',(#.Png.Uri xsteps ysteps⍴pixmat),'">'
-          :If 0=⎕NC'HR' ⋄ 'HR'⎕WC'HTMLRenderer' ⋄ :EndIf
+          :If 0=⎕NC'HR' ⋄ 'HR'⎕WC'HTMLRenderer' ('Coord' 'Pixel')('Size' 700 700) ⋄ :EndIf
           HR.HTML←'<html><body>',HTML,'</body></html>'
           ⎕DL 0.5
       :Until MBCDONE∨once     
@@ -184,7 +183,7 @@
 
               MBCDONE←0
               MBCUpdateHR&0        ⍝ Start HTMLRenderer update thread
-              futures←(iterations,¨⍳≢sets)('MBC' 'MBCUpdate'#.ll2.EachX isos)sets
+              futures←(iterations,¨⍳≢sets)('MBC' 'MBCUpdate'#.ll.EachX isos)sets
               MBCDONE←1            ⍝ Stop HTMLRenderer thread
               counters←∊2⊃¨futures ⍝ Extract result, ignoring set indices
               MBCUpdateHR 1        ⍝ Final Update of GUI

@@ -1,19 +1,13 @@
-﻿⍝ Part 8 - Use Application Workspace as Isolate Source
-)xload C:\Devt\2022-TP2\MyApp\MyApp
-⍝ In v18.2, open MyApp\APLSource folder with Dyalog
-⍝ In 17.1 & 18.0:
-⍝ ⎕SE.SALT.Load¨⊃⎕NINFO⍠1⊢'C:\Devt\2022-TP2\MyApp\APLSource\*'
-)copy conga DRC
-)copy isolate 
-)obs
-)fns
-⎕LX
-)ed Run
+﻿⍝ Part 7 - Exploring Isolate Performance
+isolate.Reset 0
+⎕VR ⎕FX 'r←loop n' 'r←⎕AI[3]' ':Repeat ⋄ n-←1' ':Until n≤0' 'r←⎕AI[3]-r'
+iss←isolate.New¨10⍴⊂'loop'
+]open taskmgr
+loop 1E8
+z←⎕AI[3] ⋄ t←0+iss.loop 1E7 ⋄ ⎕←(⎕AI[3]-z),t
+z←⎕AI[3] ⋄ t←0+(5↑iss).loop 1E7 ⋄ ⎕←(⎕AI[3]-z),t
 
-⍝ Bound executable as Isolate Source
-⍝ Export WS as bound executable
-⍝    If runtime, include dependencies in folder:
+]link.import # c:\devt\2022-TP2\Mandelbrot
+]link.import # c:\devt\2022-TP2\Mandelbrot -overwrite
 
-dyalog←'/',⍨2 ⎕NQ '.' 'GetEnvironment' 'DYALOG'
-deps←⊃,/⊃¨(⎕NINFO⍠1)dyalog∘,¨'dyalognet.dll' 'conga*.dll' 'bridge*.dll'
-'C:\Devt\2022-TP2\MyApp' ⎕NCOPY deps
+MBTest ⍝ Trace GUI example
